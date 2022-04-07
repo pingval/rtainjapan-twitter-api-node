@@ -1,9 +1,9 @@
-import { getMockTweetsByUser, userTimeline } from '../repositories/mock/tweets';
+import { getMockTweetsByUser, userTimeline } from '../../repositories/mock/tweets';
 import request from 'supertest';
 
-const app = require('../app');
+const app = require('../../app');
 
-jest.mock('../repositories/tweets', () => ({
+jest.mock('../../repositories/tweets', () => ({
   getTweetsByUser: jest.fn(getMockTweetsByUser),
 }));
 
