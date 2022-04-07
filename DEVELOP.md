@@ -44,6 +44,8 @@ volumes:
 
 ```
 
+Config の設定もお忘れなく [README.md](./README.md)
+
 ## 開発するとき
 
 docker-compose で各コンテナを起動します
