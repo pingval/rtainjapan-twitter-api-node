@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    depends_on:
+      - db
+  db:
+    image: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: prac
+    command: --default-authentication-plugin=mysql_native_password

@@ -1,0 +1,14 @@
+datasource db {
+    url      = env("DATABASE_URL")
+    provider = "mysql"
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model TweetPost {
+    id Int @id @default(autoincrement())
+    content String @db.Text
+    approvedAt DateTime?
+}

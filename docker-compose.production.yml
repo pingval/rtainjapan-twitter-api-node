@@ -1,0 +1,11 @@
+services:
+  web:
+    restart: always
+    ports:
+      - "3000:3000"
+  db:
+    restart: always
+    volumes:
+      - prac-prod:/var/lib/mysql
+volumes:
+  prac-prod:

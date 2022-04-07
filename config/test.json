@@ -1,0 +1,6 @@
+{
+  "twitter": {
+    "timeline_user_id": "1234567890",
+    "bearer": "Test Fake Token"
+  }
+}
