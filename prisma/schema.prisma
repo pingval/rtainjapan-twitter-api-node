@@ -7,7 +7,7 @@ generator client {
     provider = "prisma-client-js"
 }
 
-model TweetPost {
+model TweetPosts {
     id Int @id @default(autoincrement())
     content String @db.Text
     postedAt DateTime

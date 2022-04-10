@@ -13,13 +13,8 @@ FROM node:14
 
 RUN mkdir /app
 
+COPY . /app
 COPY --from=packages /packages/node_modules /app/node_modules
-COPY ./package.json /app
-COPY ./tsconfig*.json /app
-
-COPY ./bin /app/bin
-COPY ./config /app/config
-COPY ./src /app/src
 
 WORKDIR /app
 RUN npm run build

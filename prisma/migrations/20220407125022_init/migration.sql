@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE `TweetPost` (
+CREATE TABLE `TweetPosts` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `content` TEXT NOT NULL,
     `postedAt` DATETIME(3) NOT NULL,
