@@ -10,5 +10,6 @@ generator client {
 model TweetPost {
     id Int @id @default(autoincrement())
     content String @db.Text
+    postedAt DateTime
     approvedAt DateTime?
 }
