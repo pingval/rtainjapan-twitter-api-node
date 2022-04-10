@@ -1,30 +1,23 @@
-import { findPostMock, listRecentlyPostMock, savePostMock } from './mock/posts';
+import { PrismaClient, TweetPost } from '@prisma/client';
+import { Post, PostSaved } from '../models/post';
 
-export type Post = {
-  id?: number;
-  content: string;
-  postedAt: Date;
-  approvedAt?: Date;
+const client = new PrismaClient();
+
+export const savePost = async (post: Post): Promise<PostSaved> => {
+  return client.tweetPost.create({ data: post });
 };
 
-export const newPost = (
-  content: string,
-  now: Date
-): Post => {
-  return {
-    content,
-    postedAt: now
-  };
+export const listRecentlyPosts = (limit: number): Promise<PostSaved[]> => {
+  return client.tweetPost.findMany({
+    orderBy: {
+      postedAt: 'desc',
+    },
+    take: limit,
+  });
 };
 
-export const savePost = (post: Post): Post => {
-  return savePostMock(post);
-};
-
-export const listRecentlyPost = (limit: number): Post[] => {
-  return listRecentlyPostMock(limit);
-};
-
-export const findPost = (id: number): Post|null => {
-  return findPostMock(id);
+export const findPost = (id: number): Promise<PostSaved|null> => {
+  return client.tweetPost.findUnique({
+    where: {id},
+  });
 }

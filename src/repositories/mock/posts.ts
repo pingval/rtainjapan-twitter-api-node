@@ -1,23 +1,29 @@
-import { findPost, listRecentlyPost, Post, savePost } from '../posts';
+import { Post, PostSaved } from '../../models/post';
+import { findPost, listRecentlyPosts, savePost } from '../posts';
 
-const posts: Post[] = [];
+const posts: { [k: number]: PostSaved } = {};
+
+export const lastId = () => {
+  return Math.max(0, ... Object.keys(posts).map(k => parseInt(k)));
+}
 
 export const savePostMock: typeof savePost = (post) => {
-  const lastId = posts.length;
-  const saveOne: Post = {
-    id: lastId + 1,
+  const lId = lastId();
+
+  const saveOne = {
+    id: post.id ?? (lId + 1),
     ...post
   };
-  posts.push(saveOne);
-  return saveOne;
+  posts[saveOne.id] = saveOne;
+  return Promise.resolve(saveOne);
 };
 
-export const listRecentlyPostMock: typeof listRecentlyPost = (limit: number) => {
-  return posts.sort(
+export const listRecentlyPostsMock: typeof listRecentlyPosts = (limit: number) => {
+  return Promise.resolve(Object.values(posts).sort(
     (a, b) => b.postedAt.valueOf() - a.postedAt.valueOf()
-  ).slice(0, limit);
+  ).slice(0, limit));
 }
 
 export const findPostMock: typeof findPost = (id: number) => {
-  return posts.find((post) => post.id === id) || null;
+  return Promise.resolve(posts[id]);
 }

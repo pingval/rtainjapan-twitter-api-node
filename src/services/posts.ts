@@ -1,20 +1,58 @@
 import { depend } from 'velona';
-import { savePostMock } from '../repositories/mock/posts';
-import { newPost, Post, savePost } from '../repositories/posts';
+import model from '../models/post';
+import { savePost, findPost, listRecentlyPosts } from '../repositories/posts';
 
 export const createNewPost = depend(
-  {
-    now: () => {
-      return new Date();
-    },
-    savePost: savePostMock
+  { now: () => { return new Date(); },
+    savePost
   },
   (
-    { now },
+    { now, savePost },
     content: string
-  ): Post => {
-    const post = newPost(content, now());
+  ) => {
+    const post = model.newPost(content, now());
 
     return savePost(post);
   }
 );
+
+export const getPostById = depend(
+  { findPost },
+  (
+    { findPost },
+    id: number
+  ) => {
+    const post = findPost(id);
+
+    if (!post) {
+      throw new Error('Post is not found.');
+    }
+
+    return post;
+  }
+);
+
+export const approvePost = depend(
+  { findPost, savePost, now: () => { return new Date(); } },
+  async (
+    { findPost, savePost, now },
+    id: number
+  ) => {
+    const post = await findPost(id);
+
+    if (!post) {
+      throw new Error('Post is not found.');
+    }
+
+    return savePost(model.approve(post, now()));
+  }
+);
+
+export const listRecently = depend(
+  { listRecentlyPosts },
+  async (
+    { listRecentlyPosts }
+  ) => {
+    return listRecentlyPosts(10);
+  }
+)
