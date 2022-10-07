@@ -7,8 +7,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_URL_WITH_SCHEMA: ${DATABASE_URL_WITH_SCHEMA}
   db:
-    image: mysql
+    image: postgres
     environment:
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
-      MYSQL_DATABASE: prac
-    command: --default-authentication-plugin=mysql_native_password
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: rij_twitter

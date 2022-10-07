@@ -1,5 +1,5 @@
 import { depend } from 'velona';
-import model from '../models/post';
+import { Post } from '../models/post';
 import { savePost, findPost, listRecentlyPosts } from '../repositories/posts';
 
 export const createNewPost = depend(
@@ -10,7 +10,7 @@ export const createNewPost = depend(
     { now, savePost },
     content: string
   ) => {
-    const post = model.newPost(content, now());
+    const post = Post.newPost(content, now());
 
     return savePost(post);
   }
@@ -44,7 +44,7 @@ export const approvePost = depend(
       throw new Error('Post is not found.');
     }
 
-    return savePost(model.approve(post, now()));
+    return savePost(Post.approve(post, now()));
   }
 );
 

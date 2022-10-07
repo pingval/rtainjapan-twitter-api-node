@@ -5,13 +5,12 @@ export type Post = {
   approvedAt: Date|null;
 };
 
-export type PostSaved = {
+export type SavedPost = {
   id: number;
 } & Post;
-
-export default {
+export namespace Post {
   
-  newPost: (
+  export const newPost = (
     content: string,
     now: Date
   ): Post => {
@@ -20,13 +19,13 @@ export default {
       postedAt: now,
       approvedAt: null
     };
-  },
+  }
 
-  approve: (post: Post, now: Date): Post => {
+  export const approve = (post: Post, now: Date): Post => {
     return {
       ... post,
       approvedAt: now,
     };
-  },
+  }
 
-};
+}

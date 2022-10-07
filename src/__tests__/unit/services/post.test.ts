@@ -1,4 +1,4 @@
-import { Post, PostSaved } from '../../../models/post';
+import { Post, SavedPost } from '../../../models/post';
 import { findPostMock, listRecentlyPostsMock, savePostMock } from '../../../repositories/mock/posts';
 import { approvePost, createNewPost, getPostById, listRecently } from '../../../services/posts';
 
@@ -79,7 +79,7 @@ describe('List tweet posts', () => {
   });
 
   test('list recently posts', async () => {
-    const posts: PostSaved[] = [
+    const posts: SavedPost[] = [
       {
         id: 1,
         content: 'Hi administrators!',

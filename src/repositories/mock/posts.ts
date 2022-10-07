@@ -1,7 +1,7 @@
-import { Post, PostSaved } from '../../models/post';
+import { Post, SavedPost } from '../../models/post';
 import { findPost, listRecentlyPosts, savePost } from '../posts';
 
-const posts: { [k: number]: PostSaved } = {};
+const posts: { [k: number]: SavedPost } = {};
 
 export const lastId = () => {
   return Math.max(0, ... Object.keys(posts).map(k => parseInt(k)));
