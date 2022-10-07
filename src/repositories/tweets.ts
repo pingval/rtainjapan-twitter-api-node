@@ -2,7 +2,6 @@
 
 import { TwitterApi } from 'twitter-api-v2';
 import { config } from '../config';
-import { userTimeline } from './mock/tweets';
 
 export type UserId = string;
 
