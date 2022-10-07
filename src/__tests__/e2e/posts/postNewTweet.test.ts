@@ -1,7 +1,5 @@
-import { Response } from 'express';
 import request from 'supertest';
 import { savePostMock } from '../../../repositories/mock/posts';
-import { createNewPost } from '../../../services/posts';
 
 const app = require('../../../app');
 
