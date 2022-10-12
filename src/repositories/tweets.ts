@@ -7,14 +7,14 @@ export type UserId = string;
 
 export type TweetId = string;
 
-export type Tweet<Opt extends {[k:string]: string} = {}> = {
+export type Tweet = {
   id: UserId;
   text: string;
-} & Opt;
+};
 
-export type MentionTweet = Tweet<{
+export type MentionTweet = Tweet & {
   in_reply_to_user_id: UserId;
-}>;
+};
 
 export type PostTweet = {
   text: string;
@@ -24,7 +24,12 @@ export type PostTweet = {
   }
 }
 
-const client = new TwitterApi(config.twitter.bearer);
+const client = new TwitterApi({
+  appKey: config.twitter.apiKey,
+  appSecret: config.twitter.apiSecret,
+  accessToken: config.twitter.accessToken,
+  accessSecret: config.twitter.accessSecret,
+});
 
 export const getTweetsByUser = async (id: UserId): Promise<Tweet[]> => {
   const timeline = await client.v2.userTimeline(id);

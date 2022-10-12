@@ -1,5 +1,5 @@
 import { depend } from 'velona';
-import { Post } from '../models/post';
+import * as Post from '@models/post';
 import { savePost, findPost, listRecentlyPosts } from '../repositories/posts';
 
 export const createNewPost = depend(
@@ -18,11 +18,11 @@ export const createNewPost = depend(
 
 export const getPostById = depend(
   { findPost },
-  (
+  async (
     { findPost },
     id: number
   ) => {
-    const post = findPost(id);
+    const post = await findPost(id);
 
     if (!post) {
       throw new Error('Post is not found.');

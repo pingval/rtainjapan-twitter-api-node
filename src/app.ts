@@ -14,4 +14,4 @@ app.use(express.static(path.join(__dirname, 'public')));
 logging(app);
 route(app);
 
-module.exports = app;
+export default app;

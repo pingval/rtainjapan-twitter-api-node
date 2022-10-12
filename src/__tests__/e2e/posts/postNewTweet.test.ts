@@ -1,7 +1,9 @@
 import request from 'supertest';
 import { savePostMock } from '../../../repositories/mock/posts';
 
-const app = require('../../../app');
+import app from '../../../app';
+import { SuccessResponse } from '../../../responses';
+import { SavedPost } from '@models/post';
 
 jest.mock('../../../repositories/posts', () => ({
   savePost: savePostMock
@@ -15,10 +17,11 @@ test('post new tweet', async () => {
       content: 'Hello, event!',
     })
     .expect(200);
-
-  expect(response.body.data.content).toBe('Hello, event!');
-  expect(response.body.data.id).toBeDefined();
-  expect(response.body.data.postedAt).toBeDefined();
-  expect(response.body.data.approvedAt).toBeNull();
+  
+  const body = response.body as SuccessResponse<SavedPost>
+  expect(body.data.content).toBe('Hello, event!');
+  expect(body.data.id).toBeDefined();
+  expect(body.data.postedAt).toBeDefined();
+  expect(body.data.approvedAt).toBeNull();
 
 })

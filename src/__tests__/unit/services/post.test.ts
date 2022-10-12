@@ -37,7 +37,7 @@ describe('Get post', () => {
       approvedAt: null,
     };
 
-    savePostMock(expected);
+    await savePostMock(expected);
 
     expect(await mockedGetPostById(expected.id)).toEqual(expected);
   });
@@ -59,7 +59,7 @@ describe('Approve post', () => {
       approvedAt: now,
     };
   
-    savePostMock({
+    await savePostMock({
       id: expected.id,
       content: expected.content,
       postedAt: expected.postedAt,
@@ -112,7 +112,7 @@ describe('List tweet posts', () => {
       },
     ];
 
-    posts.forEach((post) => savePostMock(post));
+    await Promise.all(posts.map((post) => savePostMock(post)));
 
     expect(await mockedListRecently()).toEqual(expect.arrayContaining(posts));
   })

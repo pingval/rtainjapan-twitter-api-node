@@ -8,7 +8,7 @@ export const getUserTimeline = depend(
     return getTweetsByUser(
       config.twitter.timelineUserId
     );
-});
+  });
 
 export const getMentionTimeline = (): MentionTweet[] => {
   return [];

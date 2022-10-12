@@ -1,4 +1,4 @@
-import { Post, SavedPost } from '../../models/post';
+import { SavedPost } from '../../models/post';
 import { findPost, listRecentlyPosts, savePost } from '../posts';
 
 const posts: { [k: number]: SavedPost } = {};

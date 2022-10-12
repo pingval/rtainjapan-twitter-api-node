@@ -8,24 +8,22 @@ export type Post = {
 export type SavedPost = {
   id: number;
 } & Post;
-export namespace Post {
-  
-  export const newPost = (
-    content: string,
-    now: Date
-  ): Post => {
-    return {
-      content,
-      postedAt: now,
-      approvedAt: null
-    };
-  }
 
-  export const approve = (post: Post, now: Date): Post => {
-    return {
-      ... post,
-      approvedAt: now,
-    };
-  }
-
+export const newPost = (
+  content: string,
+  now: Date
+): Post => {
+  return {
+    content,
+    postedAt: now,
+    approvedAt: null
+  };
 }
+
+export const approve = (post: Post, now: Date): Post => {
+  return {
+    ... post,
+    approvedAt: now,
+  };
+}
+
