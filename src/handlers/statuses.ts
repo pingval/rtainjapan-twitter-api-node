@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { Twitter } from '../models/twitter';
+import * as Twitter from '@models/twitter';
 import Response from '../responses';
 import { getUserTimeline, tweet } from '@services/twitter.v1';
 
