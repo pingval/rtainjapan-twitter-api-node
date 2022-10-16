@@ -3,9 +3,12 @@ import { getUserTimeline } from '@services/twitter.v1'
 import request from 'supertest';
 
 import app from '../../../app';
+import { ok } from 'neverthrow';
 
 jest.mock('@services/twitter.v1');
-jest.mocked(getUserTimeline).mockImplementation(listUserTimelineV1Mock);
+jest.mocked(getUserTimeline).mockImplementation(
+  async () => Promise.resolve(ok(await listUserTimelineV1Mock()))
+);
 
 test('get user\'s timeline', async () => {
 

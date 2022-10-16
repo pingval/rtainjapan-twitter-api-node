@@ -9,9 +9,11 @@ module.exports = {
     tsconfigRootDir: __dirname,
     project: ['./tsconfig.json'],
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'neverthrow'],
   root: true,
   rules: {
-    "indent": ["error", 2],
+    "indent": ['error', 2],
+    "max-len": 'error',
+    'neverthrow/must-use-result': 'error',
   }
 };

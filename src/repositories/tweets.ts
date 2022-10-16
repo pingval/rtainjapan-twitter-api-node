@@ -1,7 +1,7 @@
 
 
 import { TwitterApi } from 'twitter-api-v2';
-import { config } from '../config';
+import { config } from '@app/config';
 
 export type UserId = string;
 

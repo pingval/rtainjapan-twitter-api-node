@@ -18,7 +18,9 @@ export const savePostMock: typeof savePost = (post) => {
   return Promise.resolve(saveOne);
 };
 
-export const listRecentlyPostsMock: typeof listRecentlyPosts = (limit: number) => {
+export const listRecentlyPostsMock: typeof listRecentlyPosts = (
+  limit: number
+) => {
   return Promise.resolve(Object.values(posts).sort(
     (a, b) => b.postedAt.valueOf() - a.postedAt.valueOf()
   ).slice(0, limit));

@@ -1,5 +1,7 @@
-import { getUserTimeline } from '../../../services/twitter.v1';
-import { listUserTimelineV1Mock, userTimeline } from '../../../repositories/mock/tweets.v1';
+import { getUserTimeline } from '@services/twitter.v1';
+import {
+  listUserTimelineV1Mock, userTimeline
+} from '@repositories/mock/tweets.v1';
 
 describe('Get user\'s timeline without cached', () => {
 
@@ -14,7 +16,10 @@ describe('Get user\'s timeline without cached', () => {
   });
 
   test('response should be equals to mocked timeline.', async () => {
-    expect(await getMockedTimeline()).toEqual(userTimeline);
-    expect(setItemMock).toBeCalledWith('timeline-cache', userTimeline, {ttl: 60});
+    const result = await getMockedTimeline();
+    expect(result.isOk() && result.value).toEqual(userTimeline);
+    expect(setItemMock).toBeCalledWith(
+      'timeline-cache', userTimeline, {ttl: 60}
+    );
   });
 });

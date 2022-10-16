@@ -6,10 +6,12 @@ type NewTweetRequest = {
   content: string;
 }
 
-export const postNewTweetHandler: RequestHandler<unknown, unknown, NewTweetRequest> = (req, res, next) => {
-  createNewPost(req.body.content)
-    .then((created) => {
-      res.json(Response.success(created))
-    })
-    .catch(next);
-};
+export const postNewTweetHandler: RequestHandler<
+  unknown, unknown, NewTweetRequest
+  > = (req, res, next) => {
+    createNewPost(req.body.content)
+      .then((created) => {
+        res.json(Response.success(created))
+      })
+      .catch(next);
+  };

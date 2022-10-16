@@ -1,6 +1,10 @@
 import { Post, SavedPost } from '../../../models/post';
-import { findPostMock, listRecentlyPostsMock, savePostMock } from '../../../repositories/mock/posts';
-import { approvePost, createNewPost, getPostById, listRecently } from '../../../services/posts';
+import {
+  findPostMock, listRecentlyPostsMock, savePostMock
+} from '../../../repositories/mock/posts';
+import {
+  approvePost, createNewPost, getPostById, listRecently
+} from '../../../services/posts';
 
 const now = new Date(2022, 4, 7, 22, 21, 0);
 

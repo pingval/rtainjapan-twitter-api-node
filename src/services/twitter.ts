@@ -1,5 +1,5 @@
-import { config } from '../config';
 import { depend } from 'velona';
+import { config } from '@app/config';
 import { getTweetsByUser, MentionTweet, Tweet } from '../repositories/tweets';
 
 export const getUserTimeline = depend(
