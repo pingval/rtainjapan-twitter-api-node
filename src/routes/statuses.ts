@@ -1,11 +1,16 @@
 import express from 'express';
 import { body } from 'express-validator';
 import { syncRoute } from '../handlers';
-import { updateStatusHandler, userTimelineHandler } from '../handlers/statuses';
+import {
+  mentionTimelineHandler,
+  updateStatusHandler,
+  userTimelineHandler
+} from '../handlers/statuses';
 
 const router = express.Router();
 
 router.get('/user_timeline', syncRoute(userTimelineHandler));
+router.get('/mention_timeline', syncRoute(mentionTimelineHandler));
 router.post(
   '/update',
   body('status').exists({ checkNull: true }).isString(),

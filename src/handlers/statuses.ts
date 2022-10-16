@@ -1,6 +1,8 @@
 import * as Twitter from '@models/twitter';
 import Response from '../responses';
-import { getUserTimeline, tweet } from '@services/twitter.v1';
+import {
+  getMentionTimeline, getUserTimeline, tweet
+} from '@services/twitter.v1';
 import { AsyncRequestHandler } from '.';
 
 export const userTimelineHandler: AsyncRequestHandler = 
@@ -13,6 +15,17 @@ export const userTimelineHandler: AsyncRequestHandler =
 
     return res.json(Response.success(timeline.value));
   };
+
+export const mentionTimelineHandler: AsyncRequestHandler =
+async (_, res) => {
+  const mentionTimeline = await getMentionTimeline();
+
+  if (mentionTimeline.isErr()) {
+    throw mentionTimeline.error;
+  }
+
+  return res.json(Response.success(mentionTimeline));
+}
 
 type UpdateStatusRequest = Pick<
   Twitter.v1.Post, 'status'|'media_ids'|'in_reply_to_status_id'|'attachment_url'

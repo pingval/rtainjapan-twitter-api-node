@@ -31,8 +31,15 @@ const client = new TwitterApi({
   accessSecret: config.twitter.accessSecret,
 });
 
-export const getTweetsByUser = async (id: UserId): Promise<Tweet[]> => {
-  const timeline = await client.v2.userTimeline(id);
+export const getTweets = async (): Promise<Tweet[]> => {
+  const { data: me } = await client.currentUserV2();
+  const timeline = await client.v2.userTimeline(me.id);
 
   return timeline.data.data;
+}
+
+export const searchByQuery = async (query: string): Promise<Tweet[]> => {
+  const response = await client.search(query);
+
+  return response.data.data;
 }

@@ -5,7 +5,7 @@ import { getUserTimeline } from '../../../services/twitter';
 
 describe('Get users timeline', () => {
   const mockedTimeline = getUserTimeline.inject(
-    { getTweetsByUser: getMockTweetsByUser}
+    { getTweets: getMockTweetsByUser}
   );
 
   test('equals to mocked timeline.', () => {

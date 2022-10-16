@@ -17,8 +17,16 @@ export const updateStatusV1 = async (
 }
 
 export const listUserTimelineV1 = async (): Promise<Twitter.v1.Timeline> => {
+  const { data: me } = await client.currentUserV2();
   const response = await client.v1.userTimeline(
-    config.twitter.timelineUserId, {count: 15}
+    me.id, {count: 15}
   );
+  return response.data;
+}
+
+export const listMentionTimelineV1 = async (): Promise<Twitter.v1.Timeline> => {
+  const response = await client.v1.mentionTimeline({
+    count: 15,
+  });
   return response.data;
 }

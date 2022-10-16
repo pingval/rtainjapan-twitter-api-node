@@ -1,6 +1,5 @@
 {
   "twitter": {
-    "timeline_user_id": "<User ID for lookup timeline>",
     "apiKey": "<API Key>",
     "apiSecret": "<API Secret>",
     "accessToken": "<Access Token>",

@@ -1,6 +1,5 @@
 {
   "twitter": {
-    "timeline_user_id": "1234567890",
     "apiKey": "Fake API Key",
     "apiSecret": "Fake API Secret",
     "accessToken": "Fake Access Token",

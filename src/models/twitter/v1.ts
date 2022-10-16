@@ -5,3 +5,4 @@ import {
 export type Post = SendTweetV1Params;
 export type Status = TweetV1;
 export type Timeline = TweetV1TimelineResult;
+export type MediaIdString = string;

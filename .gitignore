@@ -2,7 +2,9 @@
 dist
 
 # Configurations
-config/local.json
+config/*
+!config/test.json
+!config/default.json
 
 # docker-compose for development
 docker-compose.override.yml
@@ -68,3 +70,7 @@ typings/
 
 # next.js build output
 .next
+
+# local storage
+storage/*/*
+!storage/*/.gitkeep
