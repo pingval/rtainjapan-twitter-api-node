@@ -1,4 +1,4 @@
-import { uploadMedia } from '@services/twitter.v1';
+import { uploadMedia } from '@services/twitter';
 import { AsyncRequestHandler } from 'handlers';
 import responses from 'responses';
 

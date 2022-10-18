@@ -1,9 +1,13 @@
 import * as Twitter from '@models/twitter';
 import Response from '../responses';
-import {
-  getMentionTimeline, getUserTimeline, tweet
-} from '@services/twitter.v1';
 import { AsyncRequestHandler } from '.';
+import {
+  getUserTimeline,
+  getMentionTimeline,
+  searchByHashtag,
+  deleteTweet,
+  tweet,
+} from '@services/twitter';
 
 export const userTimelineHandler: AsyncRequestHandler = 
   async (_, res) => {
@@ -24,7 +28,18 @@ async (_, res) => {
     throw mentionTimeline.error;
   }
 
-  return res.json(Response.success(mentionTimeline));
+  return res.json(Response.success(mentionTimeline.value));
+}
+
+export const searchByHashtagHandler: AsyncRequestHandler =
+async (_, res) => {
+  const searchedTweets = await searchByHashtag();
+
+  if (searchedTweets.isErr()) {
+    throw searchedTweets.error;
+  }
+
+  return res.json(Response.success(searchedTweets.value))
 }
 
 type UpdateStatusRequest = Pick<
@@ -42,5 +57,21 @@ export const updateStatusHandler: AsyncRequestHandler<
   }
     
   return res.json(Response.success(timeline.value));
+}
 
+type DestroyStatusParameter = {
+  id: string;
+}
+
+export const destroyStatusHandler: AsyncRequestHandler<
+  DestroyStatusParameter
+> = async (req, res) => {
+  await deleteTweet(req.params.id);
+  const timeline = await getUserTimeline(true);
+
+  if (timeline.isErr()) {
+    throw timeline.error;
+  }
+    
+  return res.json(Response.success(timeline.value));
 }

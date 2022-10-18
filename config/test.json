@@ -1,4 +1,9 @@
 {
+  "hashtag": "#rtainjapan",
+  "cache": {
+    "ttl": 60,
+    "enabled": false
+  },
   "twitter": {
     "apiKey": "Fake API Key",
     "apiSecret": "Fake API Secret",

@@ -15,9 +15,15 @@ export type AsyncRequestHandler<
   next: NextFunction,
 ) => Promise<any>;
 
-export const syncRoute = (async: AsyncRequestHandler): RequestHandler => {
+export const syncRoute = <
+  P, ResBody, ReqBody, ReqQuery, Locals extends Record<string, any>
+>(async: AsyncRequestHandler<
+  P, ResBody, ReqBody, ReqQuery, Locals
+>): RequestHandler<P, ResBody, ReqBody, ReqQuery, Locals> => {
   return (req, res, next) => {
     async(req, res, next).catch((err) => {
+      console.error(err);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       return res.status(500).send(err);
     })
   }

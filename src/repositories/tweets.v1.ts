@@ -16,6 +16,12 @@ export const updateStatusV1 = async (
   return post;
 }
 
+export const deleteStatusV1 = async (
+  id: Twitter.v1.StatusId,
+): Promise<void> => {
+  await client.v1.deleteTweet(id);
+}
+
 export const listUserTimelineV1 = async (): Promise<Twitter.v1.Timeline> => {
   const { data: me } = await client.currentUserV2();
   const response = await client.v1.userTimeline(
