@@ -9,6 +9,7 @@ export type UrlEntity = {
   url: string;
   expanded_url: string;
   display_url: string;
+  media_key?: string;
 };
 
 export type MentionEntity = {
@@ -18,14 +19,31 @@ export type MentionEntity = {
   username: string;
 }
 
-export type Media = {
+export type Media = PhotoMedia | VideoMedia | GifMedia;
+
+export type PhotoMedia = {
   media_key: string;
-  type: 'animated_gif' | 'photo' | 'video';
+  type: 'photo';
   url: string;
+  width: number;
+  height: number;
+}
+
+export type VideoMedia = {
+  media_key: string;
+  type: 'video';
   preview_image_url: string;
   width: number;
   height: number;
-};
+}
+
+export type GifMedia = {
+  media_key: string;
+  type: 'animated_gif';
+  preview_image_url: string;
+  width: number;
+  height: number;
+}
 
 export type User = {
   id: UserId;
@@ -41,11 +59,11 @@ export type Tweet = {
   created_at: string;
   user: User;
   entities?: {
-    annotations: unknown[];
-    urls: UrlEntity[];
-    hashtags: unknown[];
-    mentions: MentionEntity[];
-    cashtags: unknown[];
+    annotations?: unknown[];
+    urls?: UrlEntity[];
+    hashtags?: unknown[];
+    mentions?: MentionEntity[];
+    cashtags?: unknown[];
   };
   media?: Media[];
   in_reply_to_status?: Tweet;

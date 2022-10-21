@@ -24,7 +24,7 @@ const timelineOptions:
   & Partial<Tweetv2SearchParams>
   & Partial<TweetV2PaginableTimelineParams>
 = {
-  "tweet.fields": [
+  'tweet.fields': [
     'id',
     'text',
     'created_at',
@@ -33,7 +33,7 @@ const timelineOptions:
     'entities',
     'attachments',
   ],
-  "media.fields": [
+  'media.fields': [
     'media_key',
     'type',
     'url',
@@ -41,7 +41,7 @@ const timelineOptions:
     'width',
     'height',
   ],
-  "user.fields": [
+  'user.fields': [
     'id',
     'name',
     'username',

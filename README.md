@@ -12,9 +12,16 @@
 
 ```json
 {
+  "hashtag": "#rtainjapan",
+  "cache": {
+    "ttl": 60,
+    "enabled": false
+  },
   "twitter": {
-    "timeline_user_id": "<User ID for lookup timeline>",
-    "bearer": "<Twitter API v2 Bearer>"
+    "apiKey": "<API Key>",
+    "apiSecret": "<API Secret>",
+    "accessToken": "<Access Token>",
+    "accessSecret": "<Access Secret>"
   }
 }
 ```

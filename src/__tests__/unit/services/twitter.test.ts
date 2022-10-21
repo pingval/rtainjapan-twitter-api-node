@@ -1,14 +1,19 @@
-import {
-  getMockTweetsByUser, userTimeline
-} from '../../../repositories/mock/tweets';
-import { getUserTimeline } from '../../../services/twitter';
+import { getUserTimeline } from '@services/twitter';
+import { makeTweetFixture } from '__fixtures__/models/twitter';
 
-describe('Get users timeline', () => {
-  const mockedTimeline = getUserTimeline.inject(
-    { getTweets: getMockTweetsByUser}
+describe('Getting users timeline', () => {
+  const timeline = [
+    makeTweetFixture({ id: '0000000000001'}),
+    makeTweetFixture({ id: '0000000000002'}),
+    makeTweetFixture({ id: '0000000000003'}),
+  ];
+
+  const mockedGetUserTimeline = getUserTimeline.inject(
+    { getTweets: () => Promise.resolve(timeline) }
   );
 
-  test('equals to mocked timeline.', () => {
-    expect(mockedTimeline()).toEqual(Promise.resolve(userTimeline));
+  it('should be received mocked timeline.', async () => {
+    const result = await mockedGetUserTimeline();
+    expect(result.isOk() && result.value).toEqual(timeline);
   });
 });

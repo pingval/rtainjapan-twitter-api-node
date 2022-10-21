@@ -12,8 +12,10 @@ module.exports = {
   plugins: ['@typescript-eslint', 'neverthrow'],
   root: true,
   rules: {
-    "indent": ['error', 2],
-    "max-len": 'error',
+    'indent': ['error', 2],
+    'quotes': ['error', 'single'],
+    'quote-props': ['error', 'as-needed'],
+    'max-len': 'error',
     'neverthrow/must-use-result': 'error',
   }
 };
