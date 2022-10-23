@@ -1,4 +1,5 @@
 {
+  "debug": false,
   "hashtag": "#rtainjapan",
   "cache": {
     "ttl": 60,

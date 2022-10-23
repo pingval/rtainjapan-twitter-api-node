@@ -8,9 +8,12 @@ import {
   Tweetv2TimelineResult,
   TweetV2UserTimelineParams,
   TwitterApi,
+  TwitterApiV2Settings,
 } from 'twitter-api-v2';
 import { config } from '@app/config';
 import { Media, Tweet } from '@models/twitter/v2';
+
+TwitterApiV2Settings.debug = config.debug;
 
 const client = new TwitterApi({
   appKey: config.twitter.apiKey,

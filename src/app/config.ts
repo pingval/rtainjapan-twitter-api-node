@@ -13,12 +13,14 @@ type TwitterConfiguration = {
 };
 
 export type Configuration = {
+  debug: boolean;
   hashtag: string;
   cache: CacheConfiguration;
   twitter: TwitterConfiguration;
 }
 
 export const config: Configuration = {
+  debug: configModule.get('debug'),
   hashtag: configModule.get('hashtag'),
   cache: {
     ttl: configModule.get('cache.ttl'),
