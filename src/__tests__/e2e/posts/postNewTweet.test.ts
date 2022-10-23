@@ -1,11 +1,11 @@
 import request from 'supertest';
-import { savePostMock } from '../../../repositories/mock/posts';
+import { savePostMock } from '../../../infrastructure/mock/posts';
 
 import app from '../../../app';
 import { SuccessResponse } from '../../../responses';
 import { SavedPost } from '@models/post';
 
-jest.mock('../../../repositories/posts', () => ({
+jest.mock('../../../infrastructure/posts', () => ({
   savePost: savePostMock
 }));
 

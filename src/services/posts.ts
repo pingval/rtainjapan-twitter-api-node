@@ -1,6 +1,6 @@
 import { depend } from 'velona';
 import * as Post from '@models/post';
-import { savePost, findPost, listRecentlyPosts } from '../repositories/posts';
+import { savePost, findPost, listRecentlyPosts } from '../infrastructure/posts';
 
 export const createNewPost = depend(
   { now: () => { return new Date(); },

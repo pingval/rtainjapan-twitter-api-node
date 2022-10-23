@@ -1,7 +1,7 @@
 import { Post, SavedPost } from '../../../models/post';
 import {
   findPostMock, listRecentlyPostsMock, savePostMock
-} from '../../../repositories/mock/posts';
+} from '../../../infrastructure/mock/posts';
 import {
   approvePost, createNewPost, getPostById, listRecently
 } from '../../../services/posts';

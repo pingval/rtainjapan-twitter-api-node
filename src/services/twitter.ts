@@ -7,9 +7,9 @@ import {
   listUserTimeline,
   listMentionTimeline,
   searchByQuery,
-} from '../repositories/tweets';
-import { updateStatusV1, deleteStatusV1 } from '@repositories/tweets.v1';
-import { uploadMediaV1 } from '@repositories/media.v1';
+} from '../infrastructure/tweets';
+import { updateStatusV1, deleteStatusV1 } from 'infrastructure/tweets.v1';
+import { uploadMediaV1 } from 'infrastructure/media.v1';
 import * as Twitter from '@models/twitter';
 
 const TIMELINE_CACHE_KEY = 'timeline-cache-v2';
