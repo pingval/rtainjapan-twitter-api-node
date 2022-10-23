@@ -1,7 +1,5 @@
 import { config } from '@app/config';
 import { ok, Result } from 'neverthrow';
-import { CacheContainer } from 'node-ts-cache';
-import { MemoryStorage } from 'node-ts-cache-storage-memory';
 import { depend } from 'velona';
 import {
   listUserTimeline,
@@ -19,14 +17,6 @@ import {
   getHashtagResult,
   cacheHashtagResult,
 } from '@infrastructure/cache'
-
-const TIMELINE_CACHE_KEY = 'timeline-cache-v2';
-const MENTION_CACHE_KEY = 'mention-cache-v2';
-const HASHTAG_CACHE_KEY = 'hashtag-cache-v2';
-
-const timelineCache = new CacheContainer(new MemoryStorage());
-
-type Cache = Pick<typeof timelineCache, 'getItem' | 'setItem'>
 
 export const getUserTimeline = depend(
   { getTweets: listUserTimeline, getCachedTimeline, cacheTimeline },
