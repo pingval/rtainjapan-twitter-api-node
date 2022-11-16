@@ -77,7 +77,11 @@ export type MentionTweet = Tweet & {
 export type PostTweet = {
   text: string;
   media?: {
-    media_ids?: TweetId[];
-    tagged_user_ids: UserId[];
-  }
+    media_ids?: string[];
+    tagged_user_ids?: UserId[];
+  };
+  reply?: {
+    in_reply_to_tweet_id: TweetId;
+  };
+  quote_tweet_id?: TweetId;
 }

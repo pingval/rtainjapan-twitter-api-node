@@ -11,7 +11,7 @@ import {
   TwitterApiV2Settings,
 } from 'twitter-api-v2';
 import { config } from '@app/config';
-import { Media, Tweet } from '@models/twitter/v2';
+import { Media, Tweet, PostTweet, TweetId } from '@models/twitter/v2';
 
 TwitterApiV2Settings.debug = config.debug;
 
@@ -73,6 +73,19 @@ export const listMentionTimeline = async (): Promise<Tweet[]> => {
   );
 
   return timelineToTweets(timelinePage.data);
+}
+
+export const updateStatus = async (post: PostTweet): Promise<Tweet> => {
+  const response = await client.v2.tweet(post.text, post);
+
+  const tweet = await client.v2.singleTweet(response.data.id, timelineOptions);
+  const { data, includes } = tweet;
+
+  return makeStatusWithIncludes(data, includes);
+}
+
+export const deleteStatus = async (id: TweetId): Promise<void> => {
+  await client.v2.deleteTweet(id);
 }
 
 export const searchByQuery = async (query: string): Promise<Tweet[]> => {

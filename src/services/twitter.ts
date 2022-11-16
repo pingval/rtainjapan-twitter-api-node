@@ -5,8 +5,9 @@ import {
   listUserTimeline,
   listMentionTimeline,
   searchByQuery,
+  updateStatus,
+  deleteStatus,
 } from '../infrastructure/tweets';
-import { updateStatusV1, deleteStatusV1 } from 'infrastructure/tweets.v1';
 import { uploadMediaV1 } from 'infrastructure/media.v1';
 import * as Twitter from '@models/twitter';
 import {
@@ -77,9 +78,9 @@ export const searchByHashtag = depend(
 )
 
 export const tweet = depend(
-  { updateStatus: updateStatusV1 },
-  async ({ updateStatus }, status: Twitter.v1.Post):
-    Promise<Result<Twitter.v1.Post, never>> => {
+  { updateStatus },
+  async ({ updateStatus }, status: Twitter.v2.PostTweet):
+    Promise<Result<Twitter.v2.Tweet, never>> => {
 
     return ok(await updateStatus(status));
   }
@@ -95,8 +96,8 @@ export const uploadMedia = depend(
 );
 
 export const deleteTweet = depend(
-  { deleteStatus: deleteStatusV1 },
-  async ({ deleteStatus }, id: Twitter.v1.StatusId)
+  { deleteStatus },
+  async ({ deleteStatus }, id: Twitter.v2.TweetId)
   : Promise<Result<void, never>> => {
     return ok(await deleteStatus(id));
   }

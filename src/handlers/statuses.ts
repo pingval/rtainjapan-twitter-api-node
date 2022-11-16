@@ -42,14 +42,25 @@ async (_, res) => {
   return res.json(Response.success(searchedTweets.value))
 }
 
-type UpdateStatusRequest = Pick<
-  Twitter.v1.Post, 'status'|'media_ids'|'in_reply_to_status_id'|'attachment_url'
->;
+type UpdateStatusRequest = {
+  status: string;
+  media_ids?: string[];
+  in_reply_to_tweet_id?: Twitter.v2.TweetId;
+  quote_tweet_id?: Twitter.v2.TweetId;
+}
 
 export const updateStatusHandler: AsyncRequestHandler<
   unknown, unknown, UpdateStatusRequest
 > = async (req, res) => {
-  await tweet(req.body);
+  const mediaIds = typeof req.body.media_ids === 'string'
+    ? [ req.body.media_ids ] : req.body.media_ids;
+  await tweet({
+    text: req.body.status,
+    media: mediaIds && {
+      media_ids: mediaIds
+    },
+    quote_tweet_id: req.body.quote_tweet_id
+  });
   const timeline = await getUserTimeline(true);
 
   if (timeline.isErr()) {

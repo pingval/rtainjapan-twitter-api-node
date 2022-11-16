@@ -18,14 +18,13 @@ jest.mocked(getUserTimeline).mockImplementation(
   async () => Promise.resolve(ok(timeline))
 );
 const mockedTweet = jest.mocked(tweet).mockImplementation(
-  (post) => Promise.resolve(ok(post))
+  (post) => Promise.resolve(ok(makeTweetFixture({ text: post.text })))
 );
 
 test('update tweet status.', async () => {
 
   const data = {
     status: '走者乙ｗｗｗｗｗｗｗｗｗｗｗｗ\nｗｗｗｗｗ\nｗｗｗｗｗｗｗｗｗｗｗｗｗｗ',
-    media_ids: [],
   }
   const response = await request(app)
     .post('/statuses/update')
@@ -37,8 +36,8 @@ test('update tweet status.', async () => {
     data: timeline,
   });
 
-  const expectPost: Twitter.v1.Post = {
-    ... data
+  const expectPost: Twitter.v2.PostTweet = {
+    text: data.status,
   };
   expect(mockedTweet).toBeCalledWith(expectPost);
 });
