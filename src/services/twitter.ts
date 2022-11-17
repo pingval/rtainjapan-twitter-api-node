@@ -78,11 +78,25 @@ export const searchByHashtag = depend(
 )
 
 export const tweet = depend(
-  { updateStatus },
-  async ({ updateStatus }, status: Twitter.v2.PostTweet):
+  { updateStatus, listUserTimeline, cacheTimeline },
+  async ({
+    updateStatus,
+    listUserTimeline,
+    cacheTimeline
+  }, status: Twitter.v2.PostTweet):
     Promise<Result<Twitter.v2.Tweet, never>> => {
 
-    return ok(await updateStatus(status));
+    const updated = await updateStatus(status);
+    const timeline = await listUserTimeline();
+
+    if (!timeline.some(tweet => tweet.id === updated.id)) {
+      await cacheTimeline([
+        updated,
+        ... timeline.slice(0, -1),
+      ]);
+    }
+
+    return ok(updated);
   }
 );
 

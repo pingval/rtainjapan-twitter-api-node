@@ -64,7 +64,7 @@ export const updateStatusHandler: AsyncRequestHandler<
     } : undefined,
     quote_tweet_id: req.body.quote_tweet_id || undefined,
   });
-  const timeline = await getUserTimeline(true);
+  const timeline = await getUserTimeline();
 
   if (timeline.isErr()) {
     throw timeline.error;
