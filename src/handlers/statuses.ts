@@ -45,8 +45,8 @@ async (_, res) => {
 type UpdateStatusRequest = {
   status: string;
   media_ids?: string[];
-  in_reply_to_tweet_id?: Twitter.v2.TweetId;
-  quote_tweet_id?: Twitter.v2.TweetId;
+  in_reply_to_tweet_id?: Twitter.v2.TweetId | null;
+  quote_tweet_id?: Twitter.v2.TweetId | null;
 }
 
 export const updateStatusHandler: AsyncRequestHandler<
@@ -56,10 +56,13 @@ export const updateStatusHandler: AsyncRequestHandler<
     ? [ req.body.media_ids ] : req.body.media_ids;
   await tweet({
     text: req.body.status,
-    media: mediaIds && {
+    media: mediaIds?.length ? {
       media_ids: mediaIds
-    },
-    quote_tweet_id: req.body.quote_tweet_id
+    } : undefined,
+    reply: req.body.in_reply_to_tweet_id ? {
+      in_reply_to_tweet_id: req.body.in_reply_to_tweet_id
+    } : undefined,
+    quote_tweet_id: req.body.quote_tweet_id || undefined,
   });
   const timeline = await getUserTimeline(true);
 
