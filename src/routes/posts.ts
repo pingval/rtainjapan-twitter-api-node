@@ -7,7 +7,7 @@ const router = express.Router();
 router.post(
   '/',
   body('content').exists({checkNull: true}),
-  postNewTweetHandler
+  postNewTweetHandler,
 );
 
 export default router;

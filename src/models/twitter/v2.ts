@@ -33,8 +33,10 @@ export type VideoMedia = {
   media_key: string;
   type: 'video';
   preview_image_url: string;
+  url: string;
   width: number;
   height: number;
+  variants: any;
 }
 
 export type GifMedia = {

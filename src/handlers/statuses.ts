@@ -10,33 +10,33 @@ import {
 } from '@services/twitter';
 
 export const userTimelineHandler: AsyncRequestHandler = 
-  async (_, res) => {
+  async (_, res, next) => {
     const timeline = await getUserTimeline();
 
     if (timeline.isErr()) {
-      throw timeline.error;
+      return next(timeline.error);
     }
 
     return res.json(Response.success(timeline.value));
   };
 
 export const mentionTimelineHandler: AsyncRequestHandler =
-async (_, res) => {
+async (_, res, next) => {
   const mentionTimeline = await getMentionTimeline();
 
   if (mentionTimeline.isErr()) {
-    throw mentionTimeline.error;
+    return next(mentionTimeline.error);
   }
 
   return res.json(Response.success(mentionTimeline.value));
 }
 
 export const searchByHashtagHandler: AsyncRequestHandler =
-async (_, res) => {
+async (_, res, next) => {
   const searchedTweets = await searchByHashtag();
 
   if (searchedTweets.isErr()) {
-    throw searchedTweets.error;
+    return next(searchedTweets.error);
   }
 
   return res.json(Response.success(searchedTweets.value))
@@ -51,10 +51,10 @@ type UpdateStatusRequest = {
 
 export const updateStatusHandler: AsyncRequestHandler<
   unknown, unknown, UpdateStatusRequest
-> = async (req, res) => {
+> = async (req, res, next) => {
   const mediaIds = typeof req.body.media_ids === 'string'
     ? [ req.body.media_ids ] : req.body.media_ids;
-  await tweet({
+  const tweetResult = await tweet({
     text: req.body.status,
     media: mediaIds?.length ? {
       media_ids: mediaIds
@@ -64,13 +64,17 @@ export const updateStatusHandler: AsyncRequestHandler<
     } : undefined,
     quote_tweet_id: req.body.quote_tweet_id || undefined,
   });
-  const timeline = await getUserTimeline();
-
-  if (timeline.isErr()) {
-    throw timeline.error;
+  if (tweetResult.isErr()) {
+    return next(tweetResult.error);
   }
-    
+
+  const timeline = await getUserTimeline();
+  if (timeline.isErr()) {
+    return next(timeline.error);
+  }
+      
   return res.json(Response.success(timeline.value));
+
 }
 
 type DestroyStatusParameter = {
@@ -79,12 +83,12 @@ type DestroyStatusParameter = {
 
 export const destroyStatusHandler: AsyncRequestHandler<
   DestroyStatusParameter
-> = async (req, res) => {
+> = async (req, res, next) => {
   await deleteTweet(req.params.id);
   const timeline = await getUserTimeline(true);
 
   if (timeline.isErr()) {
-    throw timeline.error;
+    return next(timeline.error);
   }
     
   return res.json(Response.success(timeline.value));

@@ -13,7 +13,7 @@ import {
 const router = express.Router();
 
 router.get('/user_timeline', syncRoute(userTimelineHandler));
-router.get('/mention_timeline', syncRoute(mentionTimelineHandler));
+router.get('/mentions_timeline', syncRoute(mentionTimelineHandler));
 router.get('/hash', syncRoute(searchByHashtagHandler));
 router.post(
   '/update',

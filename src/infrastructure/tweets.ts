@@ -1,4 +1,7 @@
 import {
+  ApiPartialResponseError,
+  ApiRequestError,
+  ApiResponseError,
   ApiV2Includes,
   TweetV2,
   TweetV2PaginableTimelineParams,
@@ -57,37 +60,66 @@ const timelineOptions:
   ]
 };
 
+export class TwitterError extends Error {}
+
+const wrapCallTwitter = async <T>(callback: () => Promise<T>): Promise<T> => {
+  try {
+    return await callback();
+  } catch (e) {
+    if (e instanceof ApiRequestError || e instanceof ApiPartialResponseError) {
+      throw new TwitterError(e.message);
+    }
+    if (e instanceof ApiResponseError) {
+      throw new TwitterError(
+        e.data.detail || e.message,
+      );
+    }
+    throw e;
+  }
+}
+
 export const listUserTimeline = async (): Promise<Tweet[]> => {
-  const { data: me } = await client.currentUserV2();
-  const timelinePage = await client.v2.userTimeline(me.id, timelineOptions);
+  const { data: me } = await wrapCallTwitter(() => client.currentUserV2());
+  const timelinePage = await wrapCallTwitter(
+    () => client.v2.userTimeline(me.id, timelineOptions)
+  );
 
   return timelineToTweets(timelinePage.data);
 }
 
 export const listMentionTimeline = async (): Promise<Tweet[]> => {
-  const { data: me } = await client.currentUserV2();
-  const timelinePage = await client.v2.userMentionTimeline(
-    me.id, timelineOptions
+  const { data: me } = await wrapCallTwitter(
+    () => client.currentUserV2()
+  );
+  const timelinePage = await wrapCallTwitter(
+    () => client.v2.userMentionTimeline(
+      me.id, timelineOptions
+    )
   );
 
   return timelineToTweets(timelinePage.data);
 }
 
 export const updateStatus = async (post: PostTweet): Promise<Tweet> => {
-  const response = await client.v2.tweet(post.text, post);
-
-  const tweet = await client.v2.singleTweet(response.data.id, timelineOptions);
+  const response = await wrapCallTwitter(
+    () => client.v2.tweet(post.text, post)
+  );
+  
+  const tweet = await wrapCallTwitter(
+    () => client.v2.singleTweet(response.data.id, timelineOptions));
   const { data, includes } = tweet;
-
+  
   return makeStatusWithIncludes(data, includes);
 }
 
 export const deleteStatus = async (id: TweetId): Promise<void> => {
-  await client.v2.deleteTweet(id);
+  await wrapCallTwitter(() => client.v2.deleteTweet(id));
 }
 
 export const searchByQuery = async (query: string): Promise<Tweet[]> => {
-  const response = await client.search(query, timelineOptions);
+  const response = await wrapCallTwitter(
+    () => client.search(query, timelineOptions)
+  );
 
   return timelineToTweets(response.data);
 }

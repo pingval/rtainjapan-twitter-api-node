@@ -1,4 +1,5 @@
-import { RequestHandler } from 'express';
+import { TwitterError } from '@infrastructure/tweets';
+import { ErrorRequestHandler, RequestHandler } from 'express';
 import { validationResult } from 'express-validator';
 import {
   ApiPartialResponseError,
@@ -26,23 +27,17 @@ export const validateInput: RequestHandler<
   next();
 };
 
-export const handleTwitterError: RequestHandler<
+export const handleTwitterError: ErrorRequestHandler<
   never,
   FailureResponse
-> = (req, res, next) => {
-  try {
-    next();
-  } catch (e) {
-    if (
-      e instanceof ApiRequestError
-      || e instanceof ApiPartialResponseError
-      || e instanceof ApiResponseError
-    ) {
-      return res.status(500).json(
-        Response.failure(
-          e.message
-        )
-      ) 
-    }
+> = (err, _, res, next) => {
+  if (err instanceof TwitterError) {
+    return res.status(500).json(
+      Response.failure(err.message)
+    ) 
   }
+
+  return res.status(500).json(
+    Response.failure(err as string)
+  );
 }
