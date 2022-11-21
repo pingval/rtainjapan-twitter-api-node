@@ -55,6 +55,7 @@ const timelineOptions:
   expansions: [
     'in_reply_to_user_id',
     'referenced_tweets.id',
+    'referenced_tweets.id.author_id',
     'attachments.media_keys',
     'author_id',
   ]
