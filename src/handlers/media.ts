@@ -17,6 +17,6 @@ export const uploadMediaHandler: AsyncRequestHandler = async (
   }
 
   return res.json(responses.success({
-    media_id_string: uploaded,
+    media_id_string: uploaded.value,
   }));
 }
