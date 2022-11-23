@@ -7,7 +7,9 @@ import { handleTwitterError } from './middlewares';
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({
+  limit: '1024m'
+}));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

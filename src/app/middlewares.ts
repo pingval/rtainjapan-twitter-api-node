@@ -1,11 +1,6 @@
 import { TwitterError } from '@infrastructure/tweets';
 import { ErrorRequestHandler, RequestHandler } from 'express';
 import { validationResult } from 'express-validator';
-import {
-  ApiPartialResponseError,
-  ApiRequestError,
-  ApiResponseError
-} from 'twitter-api-v2';
 import Response, { FailureResponse } from '../responses';
 
 export const validateInput: RequestHandler<
@@ -30,7 +25,7 @@ export const validateInput: RequestHandler<
 export const handleTwitterError: ErrorRequestHandler<
   never,
   FailureResponse
-> = (err, _, res, next) => {
+> = (err, _, res, _next) => {
   if (err instanceof TwitterError) {
     return res.status(500).json(
       Response.failure(err.message)
