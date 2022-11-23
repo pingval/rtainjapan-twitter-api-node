@@ -84,7 +84,7 @@ export const searchByHashtag = depend(
         return ok(cached);
       }
   
-      const searchResult = await searchByQuery(config.hashtag);
+      const searchResult = await searchByQuery(`${config.hashtag} -is:retweet`);
       if (config.cache.enabled) {
         await cacheHashtagResult(searchResult);
       }
