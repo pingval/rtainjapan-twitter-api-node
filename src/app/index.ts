@@ -4,6 +4,8 @@ import path from 'path';
 import { route } from './route';
 import { logging } from './logging';
 import { handleTwitterError } from './middlewares';
+import cors from 'cors';
+import { config } from './config';
 
 const app = express();
 
@@ -13,6 +15,10 @@ app.use(express.json({
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+if (config.cors) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  app.use(cors({ origin: config.cors.origin }));
+}
 
 logging(app);
 route(app);

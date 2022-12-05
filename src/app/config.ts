@@ -12,11 +12,16 @@ type TwitterConfiguration = {
   accessSecret: string;
 };
 
+type CorsConfiguration = {
+  origin: string;
+}
+
 export type Configuration = {
   debug: boolean;
   hashtag: string;
   cache: CacheConfiguration;
   twitter: TwitterConfiguration;
+  cors?: CorsConfiguration;
 }
 
 export const config: Configuration = {
@@ -32,4 +37,8 @@ export const config: Configuration = {
     accessToken: configModule.get('twitter.accessToken'),
     accessSecret: configModule.get('twitter.accessSecret'),
   },
+  cors: configModule.has('cors') ?
+    {
+      origin: configModule.get('cors.origin'),
+    } : undefined
 };
