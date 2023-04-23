@@ -24,7 +24,8 @@
     "node-ts-cache": "^4.4.0",
     "node-ts-cache-storage-memory": "^4.4.0",
     "twitter-api-v2": "^1.11.2",
-    "velona": "^0.7.0"
+    "velona": "^0.7.0",
+    "winston": "^3.8.2"
   },
   "devDependencies": {
     "@types/config": "0.0.41",

@@ -1,3 +1,4 @@
+import { TwitterError } from '@infrastructure/tweets';
 import {
   getMentionTimeline,
   getUserTimeline,
@@ -46,8 +47,26 @@ describe('Getting users timeline', () => {
       const result = await mockedGetUserTimeline();
       expect(result.isOk() && result.value).toEqual(cached);
     });
-
   });
+
+  describe('when Twitter API is closed', () => {
+    const histories = [
+      makeTweetFixture({ id: '1000000000001'}),
+      makeTweetFixture({ id: '1000000000002'}),
+      makeTweetFixture({ id: '1000000000003'}),
+    ];
+    const mockedGetUserTimeline = getUserTimeline.inject(
+      {
+        getTweets: () => Promise.reject(new TwitterError('GET API forbidden.')),
+        getCachedTimeline: () => Promise.resolve(undefined),
+        listTweetHistoryInMemory: () => Promise.resolve(histories),
+      }
+    );
+    it('should be received tweet histories.', async () => {
+      const result = await mockedGetUserTimeline();
+      expect(result.isOk() && result.value).toEqual(histories);
+    })
+  })
 });
 
 describe('Getting mention timeline', () => {
@@ -92,6 +111,19 @@ describe('Getting mention timeline', () => {
       expect(result.isOk() && result.value).toEqual(cached);
     });
   });
+
+  describe('when Twitter API is closed', () => {
+    const mockedGetMentionTimeline = getMentionTimeline.inject({
+      listMentionTimeline: () => Promise.reject(
+        new TwitterError('GET API forbidden.')
+      ),
+      getCachedMentions: () => Promise.resolve(undefined),
+    });
+    it('should be received empty.', async () => {
+      const result = await mockedGetMentionTimeline();
+      expect(result.isOk() && result.value).toEqual([]);
+    });
+  });
 });
 
 describe('Search by hashtag', () => {
@@ -134,6 +166,20 @@ describe('Search by hashtag', () => {
     it('should be received mocked cache.', async () => {
       const result = await mockedSearchByHashtag();
       expect(result.isOk() && result.value).toEqual(cached);
+    });
+  });
+  
+  describe('when Twitter API is closed', () => {
+    const mockedSearchByHashtag = searchByHashtag.inject({
+      searchByQuery: () => Promise.reject(
+        new TwitterError('GET API forbidden.')
+      ),
+      getHashtagResult: () => Promise.resolve(undefined),
+    });
+
+    it('should be received empty.', async () => {
+      const result = await mockedSearchByHashtag();
+      expect(result.isOk() && result.value).toEqual([]);
     });
   });
 });
