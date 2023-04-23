@@ -19,31 +19,58 @@ import {
   getHashtagResult,
   cacheHashtagResult,
 } from '@infrastructure/cache'
+import {
+  listTweetHistoryInMemory,
+  saveTweetHistory
+} from '@infrastructure/tweets.memory'
+import winston from 'winston';
+
+const logger = winston.createLogger({
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.Console(),
+  ],
+})
 
 export const getUserTimeline = depend(
-  { getTweets: listUserTimeline, getCachedTimeline, cacheTimeline },
-  async ({ getTweets, getCachedTimeline, cacheTimeline }, fresh = false)
+  {
+    getTweets: listUserTimeline,
+    getCachedTimeline,
+    cacheTimeline,
+    listTweetHistoryInMemory
+  },
+  async ({
+    getTweets,
+    getCachedTimeline,
+    cacheTimeline,
+    listTweetHistoryInMemory
+  }, fresh = false)
   : Promise<Result<Twitter.v2.Tweet[], TwitterError>> => {
     try {
       const cached = await getCachedTimeline();
-  
+
       if (cached && !fresh) {
         return ok(cached);
       }
-  
+
       const timeline = await getTweets();
       if (config.cache.enabled) {
         await cacheTimeline(timeline);
       }
-  
       return ok(timeline);
+
     } catch (e) {
       if (e instanceof TwitterError) {
-        return err(e);
+        logger.warn(
+          'Failed to fetch tweets from Twitter API. Use history from inmemory.'
+        );
+        
+        return ok(await listTweetHistoryInMemory());
       }
       throw e;
     }
-  });
+  }
+);
 
 export const getMentionTimeline = depend(
   { listMentionTimeline, getCachedMentions, cacheMentions },
@@ -66,7 +93,11 @@ export const getMentionTimeline = depend(
       return ok(mentions);
     } catch (e) {
       if (e instanceof TwitterError) {
-        return err(e);
+        logger.warn(
+          'Failed to fetch tweets from Twitter API. Return empty.'
+        );
+        logger.warn(e);
+        return ok([]);
       }
       throw e;
     }
@@ -91,10 +122,11 @@ export const searchByHashtag = depend(
   
       return ok(searchResult); 
     } catch (e) {
-      if (e instanceof TwitterError) {
-        return err(e);
-      }
-      throw e;
+      logger.warn(
+        'Failed to fetch tweets from Twitter API. Return empty.'
+      );
+      logger.warn(e);
+      return ok([]);
     }
   }
 )
@@ -111,8 +143,11 @@ export const tweet = depend(
     try {
       const updated = await updateStatus(status);
       const timeline = await listUserTimeline();
+
+      await saveTweetHistory(updated);
   
-      if (!timeline.some(tweet => tweet.id === updated.id)) {
+      if (!timeline.some(tweet => tweet.id === updated.id)
+        && config.cache.enabled) {
         await cacheTimeline([
           updated,
           ... timeline.slice(0, -1),
