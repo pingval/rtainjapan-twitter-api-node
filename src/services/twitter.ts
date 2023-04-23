@@ -37,13 +37,15 @@ export const getUserTimeline = depend(
     getTweets: listUserTimeline,
     getCachedTimeline,
     cacheTimeline,
-    listTweetHistoryInMemory
+    listTweetHistoryInMemory,
+    logger,
   },
   async ({
     getTweets,
     getCachedTimeline,
     cacheTimeline,
-    listTweetHistoryInMemory
+    listTweetHistoryInMemory,
+    logger,
   }, fresh = false)
   : Promise<Result<Twitter.v2.Tweet[], TwitterError>> => {
     try {
@@ -73,9 +75,9 @@ export const getUserTimeline = depend(
 );
 
 export const getMentionTimeline = depend(
-  { listMentionTimeline, getCachedMentions, cacheMentions },
+  { listMentionTimeline, getCachedMentions, cacheMentions, logger },
   async ({
-    listMentionTimeline, getCachedMentions, cacheMentions
+    listMentionTimeline, getCachedMentions, cacheMentions, logger
   }, fresh = false)
   : Promise<Result<Twitter.v2.Tweet[], TwitterError>> => {
     try {
@@ -105,8 +107,13 @@ export const getMentionTimeline = depend(
 )
 
 export const searchByHashtag = depend(
-  { searchByQuery, getHashtagResult, cacheHashtagResult },
-  async ({ searchByQuery, getHashtagResult, cacheHashtagResult }, fresh = false)
+  { searchByQuery, getHashtagResult, cacheHashtagResult, logger },
+  async ({
+    searchByQuery,
+    getHashtagResult,
+    cacheHashtagResult,
+    logger
+  }, fresh = false)
   : Promise<Result<Twitter.v2.Tweet[], TwitterError>> => {
     try {
       const cached = await getHashtagResult();
@@ -132,28 +139,40 @@ export const searchByHashtag = depend(
 )
 
 export const tweet = depend(
-  { updateStatus, listUserTimeline, cacheTimeline },
+  { updateStatus, listUserTimeline, cacheTimeline, logger },
   async ({
     updateStatus,
     listUserTimeline,
-    cacheTimeline
+    cacheTimeline,
+    logger,
   }, status: Twitter.v2.PostTweet):
     Promise<Result<Twitter.v2.Tweet, TwitterError>> => {
 
     try {
       const updated = await updateStatus(status);
-      const timeline = await listUserTimeline();
-
       await saveTweetHistory(updated);
-  
-      if (!timeline.some(tweet => tweet.id === updated.id)
-        && config.cache.enabled) {
-        await cacheTimeline([
-          updated,
-          ... timeline.slice(0, -1),
-        ]);
+
+      try {
+        const timeline = await listUserTimeline();
+
+        if (
+          !timeline.some(tweet => tweet.id === updated.id)
+          && config.cache.enabled
+        ) {
+          await cacheTimeline([
+            updated,
+            ... timeline.slice(0, -1),
+          ]);
+        }
+
+      } catch (getError) {
+        logger.warn(
+          'Failed to fetch tweets from Twitter API. Skip update cache.'
+        );
+        logger.warn(getError);
+        return ok(updated);
       }
-  
+
       return ok(updated);
     } catch (e) {
       if (e instanceof TwitterError) {
