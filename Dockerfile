@@ -1,4 +1,4 @@
-FROM node:14 AS packages
+FROM node:16 AS packages
 
 RUN mkdir /packages
 COPY ./package*.json /packages
@@ -6,10 +6,7 @@ COPY ./package*.json /packages
 WORKDIR /packages
 RUN npm install
 
-COPY ./prisma ./prisma
-RUN npx prisma generate
-
-FROM node:14
+FROM node:16
 
 RUN mkdir /app
 
