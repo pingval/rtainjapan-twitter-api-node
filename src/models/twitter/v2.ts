@@ -87,3 +87,8 @@ export type PostTweet = {
   };
   quote_tweet_id?: TweetId;
 }
+
+export type PostResult = {
+  id: string;
+  text: string;
+}

@@ -146,32 +146,31 @@ export const tweet = depend(
     cacheTimeline,
     logger,
   }, status: Twitter.v2.PostTweet):
-    Promise<Result<Twitter.v2.Tweet, TwitterError>> => {
+    Promise<Result<Twitter.v2.PostResult, TwitterError>> => {
 
     try {
       const updated = await updateStatus(status);
-      await saveTweetHistory(updated);
 
-      try {
-        const timeline = await listUserTimeline();
+      // try {
+      //   const timeline = await listUserTimeline();
 
-        if (
-          !timeline.some(tweet => tweet.id === updated.id)
-          && config.cache.enabled
-        ) {
-          await cacheTimeline([
-            updated,
-            ... timeline.slice(0, -1),
-          ]);
-        }
+      //   if (
+      //     !timeline.some(tweet => tweet.id === updated.id)
+      //     && config.cache.enabled
+      //   ) {
+      //     await cacheTimeline([
+      //       updated,
+      //       ... timeline.slice(0, -1),
+      //     ]);
+      //   }
 
-      } catch (getError) {
-        logger.warn(
-          'Failed to fetch tweets from Twitter API. Skip update cache.'
-        );
-        logger.warn(getError);
-        return ok(updated);
-      }
+      // } catch (getError) {
+      //   logger.warn(
+      //     'Failed to fetch tweets from Twitter API. Skip update cache.'
+      //   );
+      //   logger.warn(getError);
+      //   return ok(updated);
+      // }
 
       return ok(updated);
     } catch (e) {
