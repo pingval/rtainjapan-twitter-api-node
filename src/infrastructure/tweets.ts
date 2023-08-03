@@ -87,6 +87,7 @@ const wrapCallTwitter = async <T>(callback: () => Promise<T>): Promise<T> => {
 
 export const listUserTimeline = async (): Promise<Tweet[]> => {
   const { data: me } = await wrapCallTwitter(() => client.currentUserV2());
+  console.log(`logged in as ${JSON.stringify(me)}`);
   const timelinePage = await wrapCallTwitter(
     () => client.v2.userTimeline(me.id, timelineOptions)
   );
