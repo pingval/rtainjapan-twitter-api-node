@@ -21,9 +21,10 @@ import {
 } from '@infrastructure/cache'
 import {
   listTweetHistoryInMemory,
-  saveTweetHistory
+  saveTweetHistory,
 } from '@infrastructure/tweets.memory'
 import winston from 'winston';
+import { PostResult } from '@models/twitter/v2';
 
 const logger = winston.createLogger({
   format: winston.format.json(),
@@ -35,25 +36,18 @@ const logger = winston.createLogger({
 export const getUserTimeline = depend(
   {
     getTweets: listUserTimeline,
-    getCachedTimeline,
     cacheTimeline,
     listTweetHistoryInMemory,
     logger,
   },
   async ({
     getTweets,
-    getCachedTimeline,
     cacheTimeline,
     listTweetHistoryInMemory,
     logger,
-  }, fresh = false)
-  : Promise<Result<Twitter.v2.Tweet[], TwitterError>> => {
+  })
+  : Promise<Result<PostResult[], TwitterError>> => {
     try {
-      const cached = await getCachedTimeline();
-
-      if (cached && !fresh) {
-        return ok(cached);
-      }
 
       const timeline = await getTweets();
       if (config.cache.enabled) {
@@ -139,17 +133,17 @@ export const searchByHashtag = depend(
 )
 
 export const tweet = depend(
-  { updateStatus, listUserTimeline, cacheTimeline, logger },
+  { updateStatus, saveTweetHistory, listTweetHistoryInMemory },
   async ({
     updateStatus,
-    listUserTimeline,
-    cacheTimeline,
-    logger,
+    saveTweetHistory,
+    listTweetHistoryInMemory,
   }, status: Twitter.v2.PostTweet):
-    Promise<Result<Twitter.v2.PostResult, TwitterError>> => {
+    Promise<Result<Twitter.v2.PostResult[], TwitterError>> => {
 
     try {
       const updated = await updateStatus(status);
+      await saveTweetHistory(updated);
 
       // try {
       //   const timeline = await listUserTimeline();
@@ -172,7 +166,7 @@ export const tweet = depend(
       //   return ok(updated);
       // }
 
-      return ok(updated);
+      return ok(await listTweetHistoryInMemory());
     } catch (e) {
       if (e instanceof TwitterError) {
         return err(e);
