@@ -18,6 +18,7 @@ import {
 } from '@infrastructure/cache'
 import {
   listTweetHistoryInMemory,
+  removeTweetFromHistory,
   saveTweetHistory,
 } from '@infrastructure/tweets.memory'
 import winston from 'winston';
@@ -167,11 +168,13 @@ export const uploadMedia = depend(
 );
 
 export const deleteTweet = depend(
-  { deleteStatus },
-  async ({ deleteStatus }, id: Twitter.v2.TweetId)
+  { deleteStatus, removeTweetFromHistory },
+  async ({ deleteStatus, removeTweetFromHistory }, id: Twitter.v2.TweetId)
   : Promise<Result<void, TwitterError>> => {
     try {
-      return ok(await deleteStatus(id));
+      await deleteStatus(id);
+      await removeTweetFromHistory(id);
+      return ok(undefined);
     } catch (e) {
       if (e instanceof TwitterError) {
         return err(e);

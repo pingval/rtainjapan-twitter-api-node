@@ -20,3 +20,14 @@ export const saveTweetHistory = async (
 
   return newTweets;
 };
+
+export const removeTweetFromHistory = async (
+  id: string
+): Promise<PostResult[]> => {
+  const cached = (await storage.getItem<PostResult[]>(KEY)) || [];
+  const newTweets = cached.filter(t => t.id !== id);
+
+  await storage.setItem(KEY, newTweets, { isCachedForever: true });
+
+  return newTweets;
+}
