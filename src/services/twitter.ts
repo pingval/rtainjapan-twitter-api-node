@@ -2,7 +2,6 @@ import { config } from '@app/config';
 import { err, ok, Result } from 'neverthrow';
 import { depend } from 'velona';
 import {
-  listUserTimeline,
   listMentionTimeline,
   searchByQuery,
   updateStatus,
@@ -12,8 +11,6 @@ import {
 import { uploadMediaV1 } from 'infrastructure/media.v1';
 import * as Twitter from '@models/twitter';
 import {
-  getCachedTimeline,
-  cacheTimeline,
   getCachedMentions,
   cacheMentions,
   getHashtagResult,
@@ -35,36 +32,13 @@ const logger = winston.createLogger({
 
 export const getUserTimeline = depend(
   {
-    getTweets: listUserTimeline,
-    cacheTimeline,
     listTweetHistoryInMemory,
-    logger,
   },
   async ({
-    getTweets,
-    cacheTimeline,
     listTweetHistoryInMemory,
-    logger,
   })
   : Promise<Result<PostResult[], TwitterError>> => {
-    try {
-
-      const timeline = await getTweets();
-      if (config.cache.enabled) {
-        await cacheTimeline(timeline);
-      }
-      return ok(timeline);
-
-    } catch (e) {
-      if (e instanceof TwitterError) {
-        logger.warn(
-          'Failed to fetch tweets from Twitter API. Use history from inmemory.'
-        );
-        
-        return ok(await listTweetHistoryInMemory());
-      }
-      throw e;
-    }
+    return ok(await listTweetHistoryInMemory());
   }
 );
 
