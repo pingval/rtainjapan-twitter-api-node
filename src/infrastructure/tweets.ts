@@ -186,3 +186,11 @@ const timelineToTweets = (timeline: Tweetv2TimelineResult): Tweet[] => {
     return makeStatusWithIncludes(d, includes);
   });
 }
+
+export const getMe = async (): Promise<string> => {
+
+  const {data: me} = await wrapCallTwitter(() => 
+    client.currentUserV2());
+  
+  return me.username;
+}
