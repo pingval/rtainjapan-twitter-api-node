@@ -1,31 +1,31 @@
-# rtainjapan-twitter-api-node
+# rtainjapan-twitter-api-node を殆ど改変してないやつ
 
-開発者向けドキュメント: [DEVELOP.md](./DEVELOP.md)
+<!-- TOC depthFrom:1 depthTo:3 insertAnchor:false orderedList:false -->
+
+- [rtainjapan-twitter-api-node を殆ど改変してないやつ](#rtainjapan-twitter-api-node-を殆ど改変してないやつ)
+  - [概要](#概要)
+  - [Config](#config)
+  - [動かす](#動かす)
+
+<!-- /TOC -->
+
+----
+
+## 概要
+
+- [.env.example](.env.example)3行目の`mysql://`を`postgres://`に変更して[.env](/env)にコピーしただけ。
 
 ## Config
 
-`config/default.json` を参考に、設定ファイル `local.json` を作成してください
+設定項目の定義: [src/app/config.ts](src/app/config.ts)
 
-### Twitter
+CORSはクライアントサーバーからproxy越しに使う分には特に設定する必要ないはず。
 
-[Twitter Developer Portal](https://developer.twitter.com/en/portal/dashboard) で Twitter API v2 のアプリケーションを登録してください
+## 動かす
 
-```json
-{
-  "hashtag": "#rtainjapan",
-  "cache": {
-    "ttl": 60,
-    "enabled": false
-  },
-  "twitter": {
-    "apiKey": "<API Key>",
-    "apiSecret": "<API Secret>",
-    "accessToken": "<Access Token>",
-    "accessSecret": "<Access Secret>"
-  }
-}
+([node.js](https://nodejs.org/ja/download)をインストールし)、[本家README](https://github.com/RTAinJapan/rtainjapan-twitter-api-node)のように設定。
 ```
-
-## License
-
-Apache-2.0
+cd rtainjapan-twitter-api-node
+npm install
+npm run dev
+```
