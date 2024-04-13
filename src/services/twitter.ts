@@ -7,6 +7,7 @@ import {
   updateStatus,
   deleteStatus,
   TwitterError,
+  getMe,
 } from '../infrastructure/tweets';
 import { uploadMediaV1 } from 'infrastructure/media.v1';
 import * as Twitter from '@models/twitter';
@@ -178,6 +179,20 @@ export const deleteTweet = depend(
     } catch (e) {
       if (e instanceof TwitterError) {
         return err(e);
+      }
+      throw e;
+    }
+  }
+)
+
+export const findMe = depend(
+  { getMe }, async ({ getMe }) => {
+    try {
+      const me = await getMe();
+      return ok(me);
+    } catch (e) {
+      if (e instanceof TwitterError) {
+        return err(e)
       }
       throw e;
     }
